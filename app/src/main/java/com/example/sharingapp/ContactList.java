@@ -111,7 +111,8 @@ public class ContactList {
         }
     }
 
-    public void saveContacts(Context context) {
+    public boolean saveContacts(Context context) {
+        boolean ret = false;
         try {
             FileOutputStream fos = context.openFileOutput(FILENAME, 0);
             OutputStreamWriter osw = new OutputStreamWriter(fos);
@@ -119,10 +120,12 @@ public class ContactList {
             gson.toJson(contacts, osw);
             osw.flush();
             fos.close();
+            ret = true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return ret;
     }
 }
