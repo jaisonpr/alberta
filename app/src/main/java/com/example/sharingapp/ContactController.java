@@ -1,4 +1,4 @@
 package com.example.sharingapp;
 
-public class Cat {
+public class ContactController {
 }
