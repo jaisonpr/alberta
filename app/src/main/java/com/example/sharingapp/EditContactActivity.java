@@ -21,6 +21,32 @@ public class EditContactActivity extends AppCompatActivity implements Observer {
     private EditText username;
     private Context context;
 
+    private String email_str;
+    private String username_str;
+
+
+
+    private boolean validateInput() {
+
+        if (email_str.equals("")) {
+            email.setError("Empty field!");
+            return false;
+        }
+
+        if (!email_str.contains("@")){
+            email.setError("Must be an email address!");
+            return false;
+        }
+
+        // Check that username is unique AND username is changed (Note: if username was not changed
+        // then this should be fine, because it was already unique.)
+        if (!contact_list.isUsernameAvailable(username_str) && !(contact.getUsername().equals(username_str))) {
+            username.setError("Username already taken!");
+            return false;
+        }
+
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,28 +70,13 @@ public class EditContactActivity extends AppCompatActivity implements Observer {
 
     public void saveContact(View view) {
 
-        String email_str = email.getText().toString();
-
-        if (email_str.equals("")) {
-            email.setError("Empty field!");
-            return;
-        }
-
-        if (!email_str.contains("@")){
-            email.setError("Must be an email address!");
-            return;
-        }
-
-        String username_str = username.getText().toString();
+        email_str = email.getText().toString();
+        username_str = username.getText().toString();
         String id = contact.getId(); // Reuse the contact id
 
-        // Check that username is unique AND username is changed (Note: if username was not changed
-        // then this should be fine, because it was already unique.)
-        if (!contact_list.isUsernameAvailable(username_str) && !(contact.getUsername().equals(username_str))) {
-            username.setError("Username already taken!");
-            return;
+        if ( ! validateInput()) {
+            return ;
         }
-
 
         Contact updated_contact = new Contact(username_str, email_str, id);
 
