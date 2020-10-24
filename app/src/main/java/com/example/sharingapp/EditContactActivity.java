@@ -12,13 +12,15 @@ import android.widget.EditText;
  * contact's id.
  * Note: You will not be able contacts which are "active" borrowers
  */
-public class EditContactActivity extends AppCompatActivity {
+public class EditContactActivity extends AppCompatActivity implements Observer {
 
     private ContactList contact_list = new ContactList();
+    private ContactListController contactListController = new ContactListController(contact_list);
     private Contact contact;
     private EditText email;
     private EditText username;
     private Context context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,15 +66,12 @@ public class EditContactActivity extends AppCompatActivity {
             return;
         }
 
+
         Contact updated_contact = new Contact(username_str, email_str, id);
 
-
-        EditContactCommand editContactCommand = new EditContactCommand(contact_list, contact, updated_contact, context);
-        editContactCommand.execute();
-
-        if (! editContactCommand.isExecuted()) {
-            return;
-        }
+        contactListController.deleteContact(contact, context);
+        contactListController.addContact(updated_contact, context);
+        contactListController.saveContacts(context);
 
 
         // End EditContactActivity
@@ -82,15 +81,15 @@ public class EditContactActivity extends AppCompatActivity {
     public void deleteContact(View view) {
 
 
-        DeleteContactCommand deleteContactCommand = new DeleteContactCommand(contact_list, contact, context);
-        deleteContactCommand.execute();
-
-        if (! deleteContactCommand.isExecuted()) {
-            return;
-        }
-
+        contactListController.deleteContact(contact, context);
+        contactListController.saveContacts(context);
 
         // End EditContactActivity
         finish();
+    }
+
+    @Override
+    public void update() {
+
     }
 }

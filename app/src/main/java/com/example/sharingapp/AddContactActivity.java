@@ -11,8 +11,10 @@ import android.widget.EditText;
  */
 public class AddContactActivity extends AppCompatActivity {
 
-    private ContactList contact_list = new ContactList();
+
     private Context context;
+    private ContactList contact_list = new ContactList();
+    private ContactListController contactListController = new ContactListController(contact_list);
 
     private EditText username;
     private EditText email;
@@ -56,12 +58,8 @@ public class AddContactActivity extends AppCompatActivity {
 
         Contact contact = new Contact(username_str, email_str, null);
 
-        AddContactCommand addContactCommand = new AddContactCommand(contact_list, contact, context);
-        addContactCommand.execute();
-
-        if (! addContactCommand.isExecuted()) {
-            return;
-        }
+        contactListController.addContact(contact, context);
+        contactListController.saveContacts(context);
 
         // End AddContactActivity
         finish();
