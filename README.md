@@ -1,4 +1,4 @@
-# 'Software Design and Architecture Specialization' by 'Alberta University' on Coursera
+# 'Software Design and Architecture Specialization' by 'University of Alberta' on Coursera
 
 ## About the Specialization
 
