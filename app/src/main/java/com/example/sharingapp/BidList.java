@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * BidList Class
@@ -120,24 +121,6 @@ public class BidList extends Observable {
     }
 
 
-    public void loadBids(Context context) {
-
-        try {
-            FileInputStream fis = context.openFileInput(FILENAME);
-            InputStreamReader isr = new InputStreamReader(fis);
-            Gson gson = new Gson();
-            Type listType = new TypeToken<ArrayList<Bid>>() {
-            }.getType();
-            bids = gson.fromJson(isr, listType); // temporary
-            fis.close();
-        } catch (FileNotFoundException e) {
-            bids = new ArrayList<Bid>();
-        } catch (IOException e) {
-            bids = new ArrayList<Bid>();
-        }
-        notifyObservers();
-    }
-
     public boolean saveBids(Context context) {
         try {
             FileOutputStream fos = context.openFileOutput(FILENAME, 0);
@@ -154,5 +137,19 @@ public class BidList extends Observable {
             return false;
         }
         return true;
+    }
+
+
+
+    public void getRemoteBids(){
+        ElasticSearchManager.GetBidListTask get_bids_list_task = new ElasticSearchManager.GetBidListTask();
+        get_bids_list_task.execute();
+
+        try {
+            bids = get_bids_list_task.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        notifyObservers();
     }
 }

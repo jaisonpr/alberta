@@ -10,25 +10,28 @@ import java.util.UUID;
 /**
  * Item class
  */
-public class Item {
+public class Item extends Observable {
 
     private String title;
-    private String brand;
+    private String maker;
     private String description;
     private Dimensions dimensions;
     private String status;
-    private Contact borrower;
+    private Float minimum_bid;
+    private User borrower;
+    private String owner_id;
     protected transient Bitmap image;
     protected String image_base64;
     private String id;
 
-    public Item(String title, String brand, String description, Bitmap image,
-                String id ) {
+    public Item(String title, String maker, String description, String owner_id, String minimum_bid, Bitmap image, String id) {
         this.title = title;
-        this.brand = brand;
+        this.maker = maker;
         this.description = description;
         this.dimensions = null;
+        this.owner_id = owner_id;
         this.status = "Available";
+        this.minimum_bid = Float.valueOf(minimum_bid);
         this.borrower = null;
         addImage(image);
 
@@ -45,38 +48,62 @@ public class Item {
 
     public void setId() {
         this.id = UUID.randomUUID().toString();
+        notifyObservers();
     }
 
     public void updateId(String id){
         this.id = id;
+        notifyObservers();
     }
 
     public void setTitle(String title) {
         this.title = title;
+        notifyObservers();
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
+    public void setMaker(String maker) {
+        this.maker = maker;
+        notifyObservers();
     }
 
-    public String getBrand() {
-        return brand;
+    public String getMaker() {
+        return maker;
     }
 
     public void setDescription(String description) {
         this.description = description;
+        notifyObservers();
     }
 
     public String getDescription() {
         return description;
     }
 
+    public Float getMinBid() {
+        return this.minimum_bid;
+    }
+
+    public void setMinBid(Float minimum_bid) {
+        this.minimum_bid = minimum_bid;
+        notifyObservers();
+    }
+
+    public void setOwnerId(String owner_id) {
+        this.owner_id = owner_id;
+        notifyObservers();
+    }
+
+    public String getOwnerId() {
+        return owner_id;
+    }
+
     public void setDimensions(String length, String width, String height) {
-        this.dimensions = new Dimensions(length, width, height);
+        dimensions = new Dimensions(length, width, height);
+        notifyObservers();
     }
 
     public String getLength(){
@@ -93,18 +120,27 @@ public class Item {
 
     public void setStatus(String status) {
         this.status = status;
+        notifyObservers();
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setBorrower(Contact borrower) {
+    public void setBorrower(User borrower) {
         this.borrower = borrower;
+        notifyObservers();
     }
 
-    public Contact getBorrower() {
+    public User getBorrower() {
         return borrower;
+    }
+
+    public String getBorrowerUsername() {
+        if (borrower != null){
+            return borrower.getUsername();
+        }
+        return null;
     }
 
     public void addImage(Bitmap new_image){
@@ -116,13 +152,16 @@ public class Item {
             byte[] b = byteArrayBitmapStream.toByteArray();
             image_base64 = Base64.encodeToString(b, Base64.DEFAULT);
         }
+        notifyObservers();
     }
 
     public Bitmap getImage(){
         if (image == null && image_base64 != null) {
             byte[] decodeString = Base64.decode(image_base64, Base64.DEFAULT);
             image = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+            notifyObservers();
         }
         return image;
     }
 }
+

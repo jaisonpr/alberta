@@ -1,8 +1,8 @@
 package com.example.sharingapp;
 
 /**
- * Superclass of AddContactCommand, EditContactCommand, DeleteContactCommand,
- * AddItemCommand, EditItemCommand, DeleteItemCommand
+ * Superclass of AddUserCommand, EditUserCommand, AddItemCommand, EditItemCommand, DeleteItemCommand,
+ * AddBidCommand, and DeleteBidCommand
  */
 public abstract class Command {
 
@@ -22,4 +22,3 @@ public abstract class Command {
         this.is_executed = is_executed;
     }
 }
-

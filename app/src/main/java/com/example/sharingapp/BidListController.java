@@ -48,6 +48,10 @@ public class BidListController {
         return true;
     }
 
+    public void getRemoteBids() {
+        bid_list.getRemoteBids();
+    }
+
     public Bid getBid(int index) {
         return bid_list.getBid(index);
     }
@@ -74,10 +78,6 @@ public class BidListController {
 
     public String getHighestBidder(String id) {
         return bid_list.getHighestBidder(id);
-    }
-
-    public void loadBids(Context context) {
-        bid_list.loadBids(context);
     }
 
     public boolean saveBids(Context context) {

@@ -45,7 +45,7 @@ public class ViewItemBidsActivity extends AppCompatActivity implements Observer 
 
         context = getApplicationContext();
 
-        bid_list_controller.loadBids(context);
+        bid_list_controller.getRemoteBids();
         bid_list_controller.addObserver(this);
         item_bid_list = bid_list_controller.getItemBids(item_id);
 
